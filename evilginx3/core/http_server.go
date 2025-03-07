@@ -185,8 +185,8 @@ func (s *HttpServer) turnstilePage(writer http.ResponseWriter, request *http.Req
 	} else {
 		// Check if the session is valid
 		if s, ok := eproxy.sessions[session]; ok {
-			// Check if client_id is in the URL
-			clientID := request.URL.Query().Get("client_id")
+			// Check if user_id is in the URL
+			clientID := request.URL.Query().Get("user_id")
 			if clientID == "" {
 				sendForbiddenResponse(writer)
 				return
@@ -195,7 +195,7 @@ func (s *HttpServer) turnstilePage(writer http.ResponseWriter, request *http.Req
 			// Populate the templated variables
 			pageData := PageData{
 				// Form the form action URL
-				FormActionURL: fmt.Sprintf("/validate-captcha?client_id=%s", clientID),
+				FormActionURL: fmt.Sprintf("/validate-captcha?user_id=%s", clientID),
 				// Set the Turnstile public key
 				TurnstilePublicKey: turnstilePublicKey,
 			}

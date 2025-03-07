@@ -79,7 +79,7 @@ func SetupGPDB(path string) error {
 		if err == nil {
 			break
 		}
-		if err != nil && i >= 10 {
+		if i >= 10 {
 			fmt.Printf("Error connecting to evilgophish.db: %s\n", err)
 			return err
 		}
@@ -169,7 +169,7 @@ func HandleEmailOpened(rid string, browser map[string]string, feed_enabled bool)
 		res := Result{}
 		ed := EventDetails{}
 		ed.Browser = browser
-		ed.Payload = map[string][]string{"client_id": []string{rid}}
+		ed.Payload = map[string][]string{"user_id": []string{rid}}
 		res.Id = r.Id
 		res.RId = r.RId
 		res.UserId = r.UserId
@@ -215,7 +215,7 @@ func HandleClickedLink(rid string, browser map[string]string, feed_enabled bool)
 		res := Result{}
 		ed := EventDetails{}
 		ed.Browser = browser
-		ed.Payload = map[string][]string{"client_id": []string{rid}}
+		ed.Payload = map[string][]string{"user_id": []string{rid}}
 		res.Id = r.Id
 		res.RId = r.RId
 		res.UserId = r.UserId
@@ -544,30 +544,30 @@ func (d *Database) SetSessionUsername(sid string, username string) error {
 	return err
 }
 
-func (d *Database) SetSessionPassword(sid string, password string) error {
-	err := d.sessionsUpdatePassword(sid, password)
-	return err
-}
+// func (d *Database) SetSessionPassword(sid string, password string) error {
+// 	err := d.sessionsUpdatePassword(sid, password)
+// 	return err
+// }
 
-func (d *Database) SetSessionCustom(sid string, name string, value string) error {
-	err := d.sessionsUpdateCustom(sid, name, value)
-	return err
-}
+// func (d *Database) SetSessionCustom(sid string, name string, value string) error {
+// 	err := d.sessionsUpdateCustom(sid, name, value)
+// 	return err
+// }
 
-func (d *Database) SetSessionBodyTokens(sid string, tokens map[string]string) error {
-	err := d.sessionsUpdateBodyTokens(sid, tokens)
-	return err
-}
+// func (d *Database) SetSessionBodyTokens(sid string, tokens map[string]string) error {
+// 	err := d.sessionsUpdateBodyTokens(sid, tokens)
+// 	return err
+// }
 
-func (d *Database) SetSessionHttpTokens(sid string, tokens map[string]string) error {
-	err := d.sessionsUpdateHttpTokens(sid, tokens)
-	return err
-}
+// func (d *Database) SetSessionHttpTokens(sid string, tokens map[string]string) error {
+// 	err := d.sessionsUpdateHttpTokens(sid, tokens)
+// 	return err
+// }
 
-func (d *Database) SetSessionCookieTokens(sid string, tokens map[string]map[string]*CookieToken) error {
-	err := d.sessionsUpdateCookieTokens(sid, tokens)
-	return err
-}
+// func (d *Database) SetSessionCookieTokens(sid string, tokens map[string]map[string]*CookieToken) error {
+// 	err := d.sessionsUpdateCookieTokens(sid, tokens)
+// 	return err
+// }
 
 func (d *Database) DeleteSession(sid string) error {
 	s, err := d.sessionsGetBySid(sid)

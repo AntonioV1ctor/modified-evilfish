@@ -15,11 +15,11 @@ type Session struct {
 	Phishlet     string                             `json:"phishlet"`
 	LandingURL   string                             `json:"landing_url"`
 	Username     string                             `json:"username"`
-	Password     string                             `json:"password"`
+	// Password     string                             `json:"password"`
 	Custom       map[string]string                  `json:"custom"`
-	BodyTokens   map[string]string                  `json:"body_tokens"`
-	HttpTokens   map[string]string                  `json:"http_tokens"`
-	CookieTokens map[string]map[string]*CookieToken `json:"tokens"`
+	// BodyTokens   map[string]string                  `json:"body_tokens"`
+	// HttpTokens   map[string]string                  `json:"http_tokens"`
+	// CookieTokens map[string]map[string]*CookieToken `json:"tokens"`
 	SessionId    string                             `json:"session_id"`
 	UserAgent    string                             `json:"useragent"`
 	RemoteAddr   string                             `json:"remote_addr"`
@@ -52,11 +52,11 @@ func (d *Database) sessionsCreate(sid string, phishlet string, landing_url strin
 		Phishlet:     phishlet,
 		LandingURL:   landing_url,
 		Username:     "",
-		Password:     "",
+		// Password:     "",
 		Custom:       make(map[string]string),
-		BodyTokens:   make(map[string]string),
-		HttpTokens:   make(map[string]string),
-		CookieTokens: make(map[string]map[string]*CookieToken),
+		// BodyTokens:   make(map[string]string),
+		// HttpTokens:   make(map[string]string),
+		// CookieTokens: make(map[string]map[string]*CookieToken),
 		SessionId:    sid,
 		UserAgent:    useragent,
 		RemoteAddr:   remote_addr,
@@ -106,17 +106,17 @@ func (d *Database) sessionsUpdateUsername(sid string, username string) error {
 	return err
 }
 
-func (d *Database) sessionsUpdatePassword(sid string, password string) error {
-	s, err := d.sessionsGetBySid(sid)
-	if err != nil {
-		return err
-	}
-	s.Password = password
-	s.UpdateTime = time.Now().UTC().Unix()
+// func (d *Database) sessionsUpdatePassword(sid string, password string) error {
+// 	s, err := d.sessionsGetBySid(sid)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	s.Password = password
+// 	s.UpdateTime = time.Now().UTC().Unix()
 
-	err = d.sessionsUpdate(s.Id, s)
-	return err
-}
+// 	err = d.sessionsUpdate(s.Id, s)
+// 	return err
+// }
 
 func (d *Database) sessionsUpdateCustom(sid string, name string, value string) error {
 	s, err := d.sessionsGetBySid(sid)
@@ -130,41 +130,41 @@ func (d *Database) sessionsUpdateCustom(sid string, name string, value string) e
 	return err
 }
 
-func (d *Database) sessionsUpdateBodyTokens(sid string, tokens map[string]string) error {
-	s, err := d.sessionsGetBySid(sid)
-	if err != nil {
-		return err
-	}
-	s.BodyTokens = tokens
-	s.UpdateTime = time.Now().UTC().Unix()
+// func (d *Database) sessionsUpdateBodyTokens(sid string, tokens map[string]string) error {
+// 	s, err := d.sessionsGetBySid(sid)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	s.BodyTokens = tokens
+// 	s.UpdateTime = time.Now().UTC().Unix()
 
-	err = d.sessionsUpdate(s.Id, s)
-	return err
-}
+// 	err = d.sessionsUpdate(s.Id, s)
+// 	return err
+// }
 
-func (d *Database) sessionsUpdateHttpTokens(sid string, tokens map[string]string) error {
-	s, err := d.sessionsGetBySid(sid)
-	if err != nil {
-		return err
-	}
-	s.HttpTokens = tokens
-	s.UpdateTime = time.Now().UTC().Unix()
+// func (d *Database) sessionsUpdateHttpTokens(sid string, tokens map[string]string) error {
+// 	s, err := d.sessionsGetBySid(sid)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	s.HttpTokens = tokens
+// 	s.UpdateTime = time.Now().UTC().Unix()
 
-	err = d.sessionsUpdate(s.Id, s)
-	return err
-}
+// 	err = d.sessionsUpdate(s.Id, s)
+// 	return err
+// }
 
-func (d *Database) sessionsUpdateCookieTokens(sid string, tokens map[string]map[string]*CookieToken) error {
-	s, err := d.sessionsGetBySid(sid)
-	if err != nil {
-		return err
-	}
-	s.CookieTokens = tokens
-	s.UpdateTime = time.Now().UTC().Unix()
+// func (d *Database) sessionsUpdateCookieTokens(sid string, tokens map[string]map[string]*CookieToken) error {
+// 	s, err := d.sessionsGetBySid(sid)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	s.CookieTokens = tokens
+// 	s.UpdateTime = time.Now().UTC().Unix()
 
-	err = d.sessionsUpdate(s.Id, s)
-	return err
-}
+// 	err = d.sessionsUpdate(s.Id, s)
+// 	return err
+// }
 
 func (d *Database) sessionsUpdate(id int, s *Session) error {
 	jf, _ := json.Marshal(s)
